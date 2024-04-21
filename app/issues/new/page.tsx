@@ -7,6 +7,7 @@ import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Spinner from "@/app/components/Spinner";
 
 interface IssueForm {
   title: string;
@@ -17,6 +18,7 @@ const NewIssuePage = () => {
   const router = useRouter();
   const { register, control, handleSubmit } = useForm<IssueForm>();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="max-w-xl">
@@ -29,10 +31,13 @@ const NewIssuePage = () => {
         className="space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setLoading(true);
             await axios.post("/api/issues", data);
+
             router.push("/issues");
           } catch (error) {
             setError("An unexpected error occured.");
+            setLoading(false);
           }
         })}
       >
@@ -47,7 +52,7 @@ const NewIssuePage = () => {
           )}
         />
 
-        <Button>Submit New Issue</Button>
+        <Button disabled={loading}>Submit New Issue {loading && <Spinner />}</Button>
       </form>
     </div>
   );
