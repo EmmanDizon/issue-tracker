@@ -8,14 +8,6 @@ import React from "react";
 import { AiFillBug } from "react-icons/ai";
 
 const NavBar = () => {
-  const currentPath = usePathname();
-  const { status, data: session } = useSession();
-
-  const links = [
-    { label: "Dashboard", href: "/" },
-    { label: "Issues", href: "/issues" },
-  ];
-
   // y or horizontal -> patayo (top and bottom)
   // x or vertical  -> pahinga (left and right)
 
@@ -27,49 +19,80 @@ const NavBar = () => {
             <Link href="/">
               <AiFillBug />
             </Link>
-            <ul className="flex space-x-6">
-              {links.map((l) => (
-                <li key={l.label}>
-                  <Link
-                    className={`${
-                      l.href === currentPath ? "text-zinc-900" : "text-zinc-500"
-                    } hover:text-zinc-800 transition-colors`}
-                    href={l.href}
-                  >
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <NavLinks />
           </Flex>
-          <Box>
-            {status === "authenticated" && (
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger>
-                  <Avatar
-                    radius="full"
-                    size="2"
-                    src={session.user!.image!}
-                    fallback="?"
-                    className="cursor-pointer"
-                    
-                  />
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                  <DropdownMenu.Label>{session.user?.email}</DropdownMenu.Label>
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-              // <Link href="/api/auth/signout">Log out</Link>
-            )}
-
-            {status === "unauthenticated" && (
-              <Link href="/api/auth/signin">Login</Link>
-            )}
-          </Box>
+          <AuthStatus />
         </Flex>
       </Container>
     </nav>
   );
 };
 
+const AuthStatus = () => {
+  const { status, data: session } = useSession();
+
+  if (status === "loading") return null;
+  if (status === "unauthenticated")
+    return (
+      <Link
+        className="text-zinc-500
+ hover:text-zinc-800 transition-colors"
+        href="/api/auth/signin"
+      >
+        Login
+      </Link>
+    );
+
+  return (
+    <Box>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger>
+          <Avatar
+            radius="full"
+            size="2"
+            src={session!.user!.image!}
+            fallback="?"
+            className="cursor-pointer"
+          />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Label>{session!.user!.email}</DropdownMenu.Label>
+          <Link
+            className="text-zinc-500
+ hover:text-zinc-800 transition-colors"
+            href="/api/auth/signout"
+          >
+            Logout
+          </Link>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+    </Box>
+  );
+};
+
+const NavLinks = () => {
+  const currentPath = usePathname();
+
+  const links = [
+    { label: "Dashboard", href: "/" },
+    { label: "Issues", href: "/issues" },
+  ];
+
+  return (
+    <ul className="flex space-x-6">
+      {links.map((l) => (
+        <li key={l.label}>
+          <Link
+            className={`${
+              l.href === currentPath ? "text-zinc-900" : "text-zinc-500"
+            } hover:text-zinc-800 transition-colors`}
+            href={l.href}
+          >
+            {l.label}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+};
 export default NavBar;
