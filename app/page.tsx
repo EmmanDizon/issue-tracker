@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import IssueSummary from "./IssueSummary";
 import LatestIssues from "./LatestIssues";
+import IssueChart from "./IssueChart";
 
 interface Props {
   searchParams: { page: string };
@@ -18,6 +19,6 @@ export default async function Home({ searchParams }: Props) {
   });
 
   return (
-    <IssueSummary open={openIssue} inProgress={inProgress} closed={closed} />
+    <IssueChart open={openIssue} inProgress={inProgress} closed={closed} />
   );
 }
