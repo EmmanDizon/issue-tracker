@@ -1,20 +1,35 @@
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
+import Link from "@/app/components/Link";
 import { Issues } from "@prisma/client";
+import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { Table } from "@radix-ui/themes";
-import Link from "next/link";
+import NextLink from "next/link";
 
 interface Props {
   issues: Issues[];
+  columns: { label: string; value: keyof Issues }[];
+  searchParams: { status: string; orderBy: keyof Issues };
 }
 
-const IssueTable = ({ issues }: Props) => {
+const IssueTable = ({ issues, columns, searchParams }: Props) => {
   return (
     <Table.Root variant="surface">
       <Table.Header>
         <Table.Row>
-          <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Created</Table.ColumnHeaderCell>
+          {columns.map((column) => (
+            <Table.ColumnHeaderCell key={column.value}>
+              <NextLink
+                href={{
+                  query: { ...searchParams, orderBy: column.value },
+                }}
+              >
+                {column.label}
+              </NextLink>
+              {column.value === searchParams.orderBy && (
+                <ArrowUpIcon className="inline" />
+              )}
+            </Table.ColumnHeaderCell>
+          ))}
         </Table.Row>
       </Table.Header>
       <Table.Body>
