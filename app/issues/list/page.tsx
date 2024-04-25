@@ -4,6 +4,7 @@ import IssueActions from "./IssueActions";
 import IssueTable, { IssueQuery } from "./IssueTable";
 import { Issues } from "@prisma/client";
 import Pagination from "@/app/components/Pagination";
+import { Metadata } from "next";
 
 interface Props {
   searchParams: IssueQuery;
@@ -63,6 +64,11 @@ const IssuesPage = async ({ searchParams }: Props) => {
       </Flex>
     </div>
   );
+};
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - Issue List",
+  description: "View all issues",
 };
 
 export default IssuesPage;
