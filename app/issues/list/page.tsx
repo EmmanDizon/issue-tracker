@@ -10,9 +10,11 @@ interface Props {
 
 const IssuesPage = async ({ searchParams }: Props) => {
   const status = searchParams?.status;
+  const validStatuses = ["OPEN", "CLOSED", "IN_PROGRESS"];
+
   let where = {};
 
-  if (status && status !== "ALL") {
+  if (status && status !== "ALL" && validStatuses.includes(status)) {
     where = { status: { equals: status } };
   }
 
