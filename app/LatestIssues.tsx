@@ -14,6 +14,8 @@ const LatestIssues = async () => {
     },
   });
 
+  console.log(issues);
+
   return (
     <Card>
       <Heading size="4" mb="5">
