@@ -5,6 +5,7 @@ import IssueTable, { IssueQuery } from "./IssueTable";
 import { Issues } from "@prisma/client";
 import Pagination from "@/app/components/Pagination";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 interface Props {
   searchParams: IssueQuery;
@@ -48,21 +49,21 @@ const IssuesPage = async ({ searchParams }: Props) => {
   const issueCount = await prisma.issues.count({ where });
 
   return (
-    <div>
-      <Flex direction="column" gap="3">
-        <IssueActions />
-        <IssueTable
-          searchParams={searchParams}
-          issues={issues}
-          columns={columns}
-        />
+    <Flex direction="column" gap="3">
+      <IssueActions />
+      <IssueTable
+        searchParams={searchParams}
+        issues={issues}
+        columns={columns}
+      />
+      <Suspense>
         <Pagination
           pageSize={pageSize}
           currentPage={page}
           itemCount={issueCount}
         />
-      </Flex>
-    </div>
+      </Suspense>
+    </Flex>
   );
 };
 
