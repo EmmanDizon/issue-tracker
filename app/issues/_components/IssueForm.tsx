@@ -28,8 +28,8 @@ const IssueForm = ({ issue }: Props) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
-      if (issue) await axios.patch(`/api/issues/${issue.id}`, data);
-      else await axios.post("/api/issues", data);
+      if (issue) await axios.patch(`/api/issues/list${issue.id}`, data);
+      else await axios.post("/api/issues/list", data);
 
       router.push("/issues");
       router.refresh();
