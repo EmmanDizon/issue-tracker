@@ -5,11 +5,7 @@ import IssueChart from "./IssueChart";
 import { Flex, Grid } from "@radix-ui/themes";
 import { Metadata } from "next";
 
-interface Props {
-  searchParams: { page: string };
-}
-
-export default async function Home({ searchParams }: Props) {
+export default async function Home() {
   const open = await prisma.issues.count({ where: { status: "OPEN" } });
 
   const inProgress = await prisma.issues.count({
@@ -31,6 +27,8 @@ export default async function Home({ searchParams }: Props) {
     </Grid>
   );
 }
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Issue Tracker - Dashboard",
